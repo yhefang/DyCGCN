@@ -1,0 +1,68 @@
+work_dir: ./work_dir/NASDAQ
+
+# feeder
+feeder: feeder.feeder.Feeder
+train_feeder_args:
+  data_path: ./data/NASDAQ_processed/train_15_EOD.npy
+  price_path: ./data/NASDAQ_processed/train_15_price.npy
+  label_path: ./data/NASDAQ_processed/train_15_label.pkl
+  adj_path: ./data/NASDAQ_processed/train_15_adj.npz
+  debug: False
+test_feeder_args:
+  data_path: ./data/NASDAQ_processed/val_15_EOD.npy
+  price_path: ./data/NASDAQ_processed/val_15_price.npy
+  label_path: ./data/NASDAQ_processed/val_15_label.pkl
+  adj_path: ./data/NASDAQ_processed/val_15_adj.npz
+#===================================================
+#train_feeder_args:
+#  data_path: ./data/t=5/NASDAQ/train_15_EOD.npy
+#  price_path: ./data/t=5/NASDAQ/train_15_price.npy
+#  label_path: ./data/t=5/NASDAQ/train_15_label.pkl
+#  adj_path: ./data/t=5/NASDAQ/train_15_adj.npz
+#  debug: False
+#test_feeder_args:
+#  data_path: ./data/t=5/NASDAQ/val_15_EOD.npy
+#  price_path: ./data/t=5/NASDAQ/val_15_price.npy
+#  label_path: ./data/t=5/NASDAQ/val_15_label.pkl
+#  adj_path: ./data/t=5/NASDAQ/val_15_adj.npz
+# model
+#model: net.benchmarkmodel.GRU
+#model: net.rt_gcn.STGCN
+#model: net.rt_gcn.STGCN_wofe
+#model: net.withoutdynet_rtgcn.STGCN_withoutdynet
+model: net.rt_gcn.STGCN_withAE
+#model: net.st_gcn.STGCN2
+#model: net.SASTGCN.SASTGCN
+#model: net.benchmarkmodel.Model_rt_gcn
+model_args:
+  in_channels: 4
+  dropout: 0.5
+  hidden: 8
+  hidden2: 4
+  out_channels: 4
+  kernel: 2
+  stride: 1
+  # edge_importance_weighting: True
+#  edge_importance_weighting: 'Uniform' # Weight, Uniform, Time-aware
+  graph_args:
+    market: 'NASDAQ'
+#    relation_path: ./data/HKEXtoSSE/dyadjmx_amount_HKEXtoSSE.pkl.npz
+    relation_path: ./data/NASDAQ_processed/adjmx_amount_NASDAQ.pkl
+    strategy: 'uniform'
+
+#optim
+# weight_decay: 0.0001
+weight_decay: 0.1
+base_lr: 0.1
+step: [10, 30]
+
+# training
+device: [1,2,3,0]
+#device: 1
+batch_size: 64
+test_batch_size: 64
+num_epoch: 100
+
+# seed
+seed: 15
+

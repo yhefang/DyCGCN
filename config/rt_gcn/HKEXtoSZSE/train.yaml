@@ -1,0 +1,70 @@
+work_dir: ./work_dir/HKEXtoSZSE
+
+# feeder
+feeder: feeder.feeder.Feeder
+train_feeder_args:
+  data_path: ./data/HKEXtoSZSE/train_15_EOD.npy
+  price_path: ./data/HKEXtoSZSE/train_15_price.npy
+  label_path: ./data/HKEXtoSZSE/train_15_label.pkl
+  adj_path: ./data/HKEXtoSZSE/adj_train_15.npz
+  debug: False
+test_feeder_args:
+  data_path: ./data/HKEXtoSZSE/val_15_EOD.npy
+  price_path: ./data/HKEXtoSZSE/val_15_price.npy
+  label_path: ./data/HKEXtoSZSE/val_15_label.pkl
+  adj_path: ./data/HKEXtoSZSE/adj_val_15.npz
+#===================================================
+#train_feeder_args:
+#  data_path: ./data/t=5/SZSE/train_15_EOD.npy
+#  price_path: ./data/t=5/SZSE/train_15_price.npy
+#  label_path: ./data/t=5/SZSE/train_15_label.pkl
+#  adj_path: ./data/t=5/SZSE/train_15_adj.npz
+#  debug: False
+#test_feeder_args:
+#  data_path: ./data/t=5/SZSE/val_15_EOD.npy
+#  price_path: ./data/t=5/SZSE/val_15_price.npy
+#  label_path: ./data/t=5/SZSE/val_15_label.pkl
+#  adj_path: ./data/t=5/SZSE/val_15_adj.npz
+
+# model
+model: net.rt_gcn.STGCN_withAE
+#model: net.rt_gcn.STGCN
+#model: net.rt_gcn.STGCN_wofe
+#model: net.withoutdynet_rtgcn.STGCN_withoutdynet
+#model: net.benchmarkmodel.GRU
+#model: net.benchmarkmodel.Model_rt_gcn
+#model: net.st_gcn.STGCN2
+#model: net.SASTGCN.SASTGCN
+#model: net.benchmarkmodel.LSTM3
+model_args:
+  in_channels: 4
+  dropout: 0.5
+  hidden: 8
+  hidden2: 4
+  out_channels: 4
+  kernel: 1
+  stride: 1
+  # edge_importance_weighting: True
+#  edge_importance_weighting: 'Uniform' # Weight, Uniform, Time-aware
+  graph_args:
+    market: 'HKEXtoSZSE'
+    relation_path: ./data/HKEXtoSZSE/adjmx_amount_HKEXtoSZSE.pkl
+    strategy: 'uniform'
+
+#optim
+# weight_decay: 0.0001
+weight_decay: 0.1
+base_lr: 0.1
+step: [10, 30]
+
+# training
+device: [1,2,3,0]
+#device: 0
+batch_size: 64
+test_batch_size: 64
+num_epoch: 100
+
+
+# seed
+seed: 50
+

@@ -1,0 +1,58 @@
+#weights: ./work_dir/NASDAQ/best_model.pt
+
+weights: ./work_dir/NASDAQ/gru_best_model.pt
+#weights: ./work_dir/NASDAQ/lstm_best_model.pt
+#weights: ./work_dir/NASDAQ/stgcn_best_model.pt
+#weights: ./work_dir/NASDAQ/sastgcn_best_model.pt
+#weights: ./work_dir/NASDAQ/rtgcn_best_model.pt
+#weights: ./work_dir/NASDAQ/dygcngru_best_model.pt
+#weights: ./work_dir/NASDAQ/dygcngruae_best_model.pt
+#weights: ./work_dir/NASDAQ/highloss_best_model.pt
+
+# feeder
+feeder: feeder.feeder.Feeder
+test_feeder_args:
+  data_path: ./data/NASDAQ_processed/test_15_EOD.npy
+  price_path: ./data/NASDAQ_processed/test_15_price.npy
+  label_path: ./data/NASDAQ_processed/test_15_label.pkl
+  adj_path: ./data/NASDAQ_processed/test_15_adj.npz
+#======================================================
+#test_feeder_args:
+#  data_path: ./data/t=5/NASDAQ/test_15_EOD.npy
+#  price_path: ./data/t=5/NASDAQ/test_15_price.npy
+#  label_path: ./data/t=5/NASDAQ/test_15_label.pkl
+#  adj_path: ./data/t=5/NASDAQ/test_15_adj.npz
+
+# model
+model: net.benchmarkmodel.GRU
+#model: net.benchmarkmodel.LSTM3
+#model: net.st_gcn.STGCN2
+#model: net.SASTGCN.SASTGCN
+#model: net.benchmarkmodel.Model_rt_gcn
+#model: net.withoutdynet_rtgcn.STGCN_withoutdynet
+#model: net.rt_gcn.STGCN
+#model: net.rt_gcn.STGCN_wofe
+#model: net.rt_gcn.STGCN_withAE
+model_args:
+  in_channels: 4
+  dropout: 0
+  hidden: 8
+  hidden2: 4
+  out_channels: 4
+  kernel: 2
+  stride: 1
+  # edge_importance_weighting: True
+#  edge_importance_weighting: 'Uniform'
+  graph_args:
+    market: 'NASDAQ'
+    relation_path: ./data/NASDAQ_processed/adjmx_amount_NASDAQ.pkl
+    strategy: 'uniform'
+
+# test 
+phase: test
+device: 0
+test_batch_size: 64
+
+
+# seed
+seed: 8
